@@ -54,11 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.classList.add("box");
             card.classList.add("box-" + String((i + 1)));
             card.setAttribute("id", String(i));
-            card.textContent = String([i + 1]);
-            // need to add that checks ir clicked element isn't white. 
-
-            card.addEventListener('click', flipcard)
-
+            card.addEventListener('click', flipcard, {once:true})
             parent.appendChild(card);
         }
     }
@@ -71,13 +67,19 @@ document.addEventListener('DOMContentLoaded', () => {
         let cards = document.querySelectorAll<HTMLDivElement>('.box')
         const optionOneId: number = Number(cardsChoosenId[0]);
         const optionTwoId: number = Number(cardsChoosenId[1]);
+                            // set here that you cannot click on more then two cards
+                        // let allCardArray: number[]= [0,1,2,3,4,5]
+                        // for (let i=0; i<allCardArray.length; i++){
+                        //     if (allCardArray[i]=== optionOneId){
+
+                        //     }
+                        // }
+                            
         if (cardsChosen[0] === cardsChosen[1]) {
             cards[optionOneId].style.backgroundColor = 'white';
             cards[optionTwoId].style.backgroundColor = 'white';
-            cards[optionOneId].innerHTML = 'You did it';
-            cards[optionTwoId].innerHTML = 'You did it';
-            cards[optionOneId].removeEventListener('click', flipcard)
-            cards[optionTwoId].removeEventListener('click', flipcard)
+            cards[optionOneId].removeEventListener('click', flipcard);
+            cards[optionTwoId].removeEventListener('click', flipcard);
             cardsWon = [...cardsWon, ...cardsChosen];
         } else {
             cards[optionOneId].style.backgroundColor = '#D9D9D9';
@@ -87,39 +89,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         cardsChosen = []
         cardsChoosenId = []
-        //checks if game is over 
-        if (cardsWon.length === cardArray.length || cardsWon.length > cardArray.length) {
-            //counts points 
-            points++;
-            window.localStorage.setItem('points', String(points));
-            //removed grid and show reset button
-            const allCards = document.querySelector<HTMLDivElement>('.parent')
-            const resetGaim = document.querySelector<HTMLButtonElement>('.startButtton')
-            allCards.remove();
-            startGame.style.display = 'grid';
-            resetGaim.innerHTML = "Congradulations, you won! click - to play again"
-            resetGaim.style.fontSize = "32px";
-            resetGaim.addEventListener('click', () => {
-                cardsWon = []
-            })
-        }
+                        //checks if game is over 
+                        if (cardsWon.length === cardArray.length || cardsWon.length > cardArray.length) {
+                            //counts points 
+                            points++;
+                            window.localStorage.setItem('points', String(points));
+                            updateUI();
+                            //removed grid and show reset button
+                            const allCards = document.querySelector<HTMLDivElement>('.parent')
+                            const resetGaim = document.querySelector<HTMLButtonElement>('.startButtton')
+                            allCards.remove();
+                            startGame.style.display = 'grid';
+                            resetGaim.innerHTML = "Congradulations, you won! click - to play again"
+                            resetGaim.style.fontSize = "32px";
+                            resetGaim.addEventListener('click', () => {
+                                cardsWon = []
+                            })
+                        }
     }
     // flipcard function here:
     function flipcard() {
         let cardId = this.getAttribute('id');
         cardsChosen.push(cardArray[cardId].name)
         cardsChoosenId.push(cardId);
-        document.getElementById(cardId).style.backgroundColor = cardArray[cardId].color
-        //  if(document.getElementById(cardId).style.backgroundColor === 'white'){
+        let changingcard = document.getElementById(cardId);
+        changingcard.style.backgroundColor = cardArray[cardId].color
+                        // flipcard transformation
+                        // changingcard.style.transition= '0.1s';
+                        // changingcard.style.transform= 'rotateY(180deg)';
+                        
+                        // const hideColor = () => {
+                        //     changingcard.style.backgroundColor = cardArray[cardId].color
+                        //    }
+                        // setTimeout(hideColor, 200);
+        
         document.getElementById(cardId).removeEventListener('click', flipcard)
         if (cardsChosen.length === 2) {
-            setTimeout(checkForMatch, 200)
-
+            setTimeout(checkForMatch, 300)
         } else {
 
         }
 
     }
-
+    function updateUI (){
+        let values:string[] = [], keys = Object.keys(localStorage), i= keys.length;
+        while (i--){values.push(localStorage.getItem(keys[i]));} 
+       document.getElementById('showPoints').textContent ="Points: "+values+"";
+    }
 })
 
