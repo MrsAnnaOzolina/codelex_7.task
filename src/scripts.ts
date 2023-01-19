@@ -129,7 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
 
         }
-
     }
     function updateUI (){
         let values:string[] = [], keys = Object.keys(localStorage), i= keys.length;
