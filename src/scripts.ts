@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let cardsChosen: string[] = [];
     let cardsChoosenId: string[] = [];
     let cardsWon: string[] = [];
+    let points: number = 0;
     // click on the button and start the game
 
     // function that starts the game if we click on start game.
@@ -86,7 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         cardsChosen = []
         cardsChoosenId = []
-        if (cardsWon.length === 6 || cardsWon.length > 6) {
+        //checks if game is over 
+        if (cardsWon.length === cardArray.length || cardsWon.length > cardArray.length) {
+            //counts points 
+            points++;
+            window.localStorage.setItem('points', String(points));
+            //removed grid and show reset button
             const allCards = document.querySelector<HTMLDivElement>('.parent')
             const resetGaim = document.querySelector<HTMLButtonElement>('.startButtton')
             allCards.remove();
@@ -97,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 cardsWon = []
             })
         }
-
     }
     // flipcard function here:
     function flipcard() {
